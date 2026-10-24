@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250">
+  <rect width="400" height="250" rx="12" fill="#0e1726"/>
+  <rect x="20" y="20" width="360" height="210" rx="8" fill="#142033" stroke="#1e2b40" stroke-width="2"/>
+  <text x="200" y="60" text-anchor="middle" fill="#3b82f6" font-size="24" font-weight="bold">🏆 Top 10</text>
+  <rect x="40" y="80" width="320" height="30" rx="6" fill="#1a2d4a"/>
+  <text x="55" y="100" fill="#f87171" font-size="16">🥇</text>
+  <text x="80" y="100" fill="#e8eef8" font-size="14">Article le plus pertinent</text>
+  <rect x="40" y="118" width="320" height="30" rx="6" fill="#1a2d4a"/>
+  <text x="55" y="138" fill="#f87171" font-size="16">🥈</text>
+  <text x="80" y="138" fill="#e8eef8" font-size="14">Deuxième article</text>
+  <rect x="40" y="156" width="320" height="30" rx="6" fill="#1a2d4a"/>
+  <text x="55" y="176" fill="#f87171" font-size="16">🥉</text>
+  <text x="80" y="176" fill="#e8eef8" font-size="14">Troisième article</text>
+  <text x="200" y="220" text-anchor="middle" fill="#8a99b3" font-size="14">Classement hebdomadaire</text>
+</svg>

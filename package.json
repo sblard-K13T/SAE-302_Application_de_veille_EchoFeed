@@ -1,0 +1,28 @@
+{
+  "name": "echofeed",
+  "version": "1.0.0",
+  "description": "Application de veille technologique en temps réel",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "cert": "sh scripts/generate-cert.sh"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "feedparser": "^2.2.10",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.7",
+    "request": "^2.88.2",
+    "socket.io": "^4.7.2",
+    "uuid": "^9.0.0"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
+}

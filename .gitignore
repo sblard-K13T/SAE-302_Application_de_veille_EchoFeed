@@ -1,0 +1,13 @@
+# Dépendances
+node_modules/
+
+# Secrets et certificats : ne jamais publier
+.env
+*.pem
+
+# Données locales (comptes, messages, articles)
+data/*.json
+
+# Divers
+*.log
+.DS_Store

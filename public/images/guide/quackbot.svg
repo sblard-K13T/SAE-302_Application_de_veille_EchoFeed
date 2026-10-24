@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250">
+  <rect width="400" height="250" rx="12" fill="#0e1726"/>
+  <rect x="20" y="20" width="360" height="210" rx="8" fill="#142033" stroke="#1e2b40" stroke-width="2"/>
+  <text x="200" y="60" text-anchor="middle" fill="#3b82f6" font-size="24" font-weight="bold">🤖 QuackBot</text>
+  <circle cx="200" cy="120" r="35" fill="#3b82f6"/>
+  <text x="200" y="128" text-anchor="middle" font-size="30">🦆</text>
+  <rect x="80" y="170" width="240" height="25" rx="12" fill="#1a2d4a"/>
+  <text x="200" y="187" text-anchor="middle" fill="#e8eef8" font-size="12">Daily News | Alertes | Top 10</text>
+  <text x="200" y="220" text-anchor="middle" fill="#8a99b3" font-size="14">Assistant virtuel intelligent</text>
+</svg>

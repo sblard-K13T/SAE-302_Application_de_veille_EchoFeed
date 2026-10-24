@@ -79,4 +79,3 @@ Les résultats suivent les catégories choisies dans le profil de l'utilisateur 
 
 - BLARD Samuel — Gestionnaire BDD / Back-End
 - DOUCE Lucas — Gestionnaire Front-End / UI
-# SAE-302_Application_de_veille_EchoFeed

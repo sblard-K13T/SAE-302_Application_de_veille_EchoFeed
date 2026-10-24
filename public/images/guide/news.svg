@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250">
+  <rect width="400" height="250" rx="12" fill="#0e1726"/>
+  <rect x="20" y="20" width="360" height="210" rx="8" fill="#142033" stroke="#1e2b40" stroke-width="2"/>
+  <text x="200" y="60" text-anchor="middle" fill="#3b82f6" font-size="24" font-weight="bold">📰 Actualités</text>
+  <rect x="40" y="80" width="140" height="100" rx="6" fill="#1a2d4a"/>
+  <rect x="200" y="80" width="140" height="100" rx="6" fill="#1a2d4a"/>
+  <rect x="50" y="95" width="120" height="8" rx="4" fill="#3b82f6"/>
+  <rect x="50" y="110" width="100" height="6" rx="3" fill="#8a99b3"/>
+  <rect x="50" y="125" width="110" height="6" rx="3" fill="#8a99b3"/>
+  <rect x="50" y="140" width="90" height="6" rx="3" fill="#8a99b3"/>
+  <rect x="210" y="95" width="120" height="8" rx="4" fill="#2dd4bf"/>
+  <rect x="210" y="110" width="100" height="6" rx="3" fill="#8a99b3"/>
+  <rect x="210" y="125" width="110" height="6" rx="3" fill="#8a99b3"/>
+  <rect x="210" y="140" width="90" height="6" rx="3" fill="#8a99b3"/>
+  <text x="200" y="220" text-anchor="middle" fill="#8a99b3" font-size="14">Flux RSS agrégés en temps réel</text>
+</svg>
