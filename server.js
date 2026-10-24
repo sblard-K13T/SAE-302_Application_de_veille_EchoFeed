@@ -16,10 +16,25 @@ const { CATEGORIES } = require('./veille/config');
 const { enrichir } = require('./veille/scoring');
 
 const app = express();
-const PORT = 8443;
+
+// Mode "derrière un proxy" (Render, etc.) : l'hébergeur fournit le HTTPS et impose le port.
+// Activé automatiquement sur Render (variable RENDER) ou manuellement avec HTTP_ONLY=true.
+// En local, rien ne change : HTTPS sur le port 8443 avec vos certificats.
+const MODE_PROXY = process.env.RENDER === 'true' || process.env.HTTP_ONLY === 'true';
+const PORT = MODE_PROXY ? (parseInt(process.env.PORT) || 10000) : 8443;
 const HTTP_PORT = 8080;
 const JWT_SECRET = process.env.JWT_SECRET || 'echofeed_secret_key_2024';
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'echofeed_encryption_key_2024';
+
+// En ligne, les valeurs par défaut (publiques) sont interdites : on refuse de démarrer sans vrais secrets
+if (MODE_PROXY) {
+    const manquantes = ['JWT_SECRET', 'ENCRYPTION_KEY', 'ROOT_PASSWORD'].filter(k => !process.env[k]);
+    if (manquantes.length) {
+        console.error(`Variables d'environnement obligatoires manquantes : ${manquantes.join(', ')}`);
+        process.exit(1);
+    }
+    app.set('trust proxy', 1);
+}
 
 //############ Middleware
 app.use(cors());
@@ -38,7 +53,8 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 //############ Base de données JSON
-const DB_FILE = path.join(__dirname, 'data', 'db.json');
+// DATA_DIR permet de placer la base sur un disque persistant (ex. /var/data sur Render)
+const DB_FILE = path.join(process.env.DATA_DIR || path.join(__dirname, 'data'), 'db.json');
 
 function loadDB() {
     if (!fs.existsSync(DB_FILE)) {
@@ -366,23 +382,22 @@ app.get('/api/messages/:room', (req, res) => {
 //############ Démarrage
 ensureRootUser();
 
-// Serveur HTTPS
-const KEY_FILE = path.join(__dirname, 'key.pem');
-const CERT_FILE = path.join(__dirname, 'cert.pem');
-if (!fs.existsSync(KEY_FILE) || !fs.existsSync(CERT_FILE)) {
-    console.error('Certificats HTTPS manquants (key.pem / cert.pem). Lancez : npm run cert');
-    process.exit(1);
+// Serveur : HTTP derrière le proxy de l'hébergeur, ou HTTPS local avec certificat auto-signé
+let server;
+if (MODE_PROXY) {
+    server = http.createServer(app);
+} else {
+    const KEY_FILE = path.join(__dirname, 'key.pem');
+    const CERT_FILE = path.join(__dirname, 'cert.pem');
+    if (!fs.existsSync(KEY_FILE) || !fs.existsSync(CERT_FILE)) {
+        console.error('Certificats HTTPS manquants (key.pem / cert.pem). Lancez : npm run cert');
+        process.exit(1);
+    }
+    if (!process.env.JWT_SECRET || !process.env.ENCRYPTION_KEY) {
+        console.warn('ATTENTION : JWT_SECRET / ENCRYPTION_KEY absents du .env, des valeurs par défaut publiques sont utilisées.');
+    }
+    server = https.createServer({ key: fs.readFileSync(KEY_FILE), cert: fs.readFileSync(CERT_FILE) }, app);
 }
-if (!process.env.JWT_SECRET || !process.env.ENCRYPTION_KEY) {
-    console.warn('ATTENTION : JWT_SECRET / ENCRYPTION_KEY absents du .env, des valeurs par défaut publiques sont utilisées.');
-}
-
-const httpsOptions = {
-    key: fs.readFileSync(KEY_FILE),
-    cert: fs.readFileSync(CERT_FILE)
-};
-
-const server = https.createServer(httpsOptions, app);
 
 //############ Salons du chat : "général" + un salon par catégorie choisie dans les préférences de veille
 function salonsAutorises(user) {
@@ -468,14 +483,18 @@ io.on('connection', (socket) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`Serveur EchoFeed HTTPS démarré sur le port ${PORT}`);
+    console.log(MODE_PROXY
+        ? `Serveur EchoFeed démarré sur le port ${PORT} (HTTP, HTTPS assuré par l'hébergeur)`
+        : `Serveur EchoFeed HTTPS démarré sur le port ${PORT}`);
 });
 
-// Redirection HTTP vers HTTPS
-const httpApp = express();
-httpApp.get('*', (req, res) => {
-    res.redirect(`https://${req.headers.host}${req.url}`);
-});
-http.createServer(httpApp).listen(HTTP_PORT, () => {
-    console.log(`Redirection HTTP vers HTTPS sur le port ${HTTP_PORT}`);
-});
+// Redirection HTTP vers HTTPS (en local uniquement : l'hébergeur s'en charge en ligne)
+if (!MODE_PROXY) {
+    const httpApp = express();
+    httpApp.get('*', (req, res) => {
+        res.redirect(`https://${req.headers.host}${req.url}`);
+    });
+    http.createServer(httpApp).listen(HTTP_PORT, () => {
+        console.log(`Redirection HTTP vers HTTPS sur le port ${HTTP_PORT}`);
+    });
+}
